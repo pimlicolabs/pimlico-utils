@@ -1,0 +1,22 @@
+{
+	"name": "pimlico-webhook",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"lint": "biome check --error-on-warnings .",
+		"format": "biome format --write .",
+		"webhook-verifier": "pnpm --filter @pimlico/webhook-verifier",
+		"example": "pnpm --filter @pimlico/example"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"type": "module",
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4"
+	}
+}
