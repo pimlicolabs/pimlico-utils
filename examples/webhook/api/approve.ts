@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { pimlicoWebhookVerifier } from '@pimlico/webhook-verifier'
+import { pimlicoWebhookVerifier } from '@pimlico/webhook'
 
 const apiKey = process.env.PIMLICO_API_KEY as string;
 

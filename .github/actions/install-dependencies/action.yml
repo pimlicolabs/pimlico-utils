@@ -1,0 +1,14 @@
+name: "Install dependencies"
+description: "Prepare repository and all dependencies"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+      with:
+        version: 9.14.2
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --ignore-scripts

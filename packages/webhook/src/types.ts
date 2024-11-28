@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
-import { Address } from "viem";
-import { UserOperation } from "viem/_types/account-abstraction/types/userOperation";
+import type { Address } from "viem";
+import type { UserOperation } from "viem/account-abstraction";
 type Fetch = typeof fetch;
 
 export type KeyFetcher = () => Promise<crypto.KeyObject>;

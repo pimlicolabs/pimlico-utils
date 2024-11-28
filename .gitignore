@@ -1,3 +1,6 @@
 node_modules
 dist
 .vercel
+_cjs
+_esm
+_types

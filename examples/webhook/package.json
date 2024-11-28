@@ -11,7 +11,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "@pimlico/webhook-verifier": "workspace:*",
+    "@pimlico/webhook": "workspace:*",
     "@vercel/node": "^3.1.7",
     "vercel": "^34.2.7"
   }

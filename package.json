@@ -1,22 +1,25 @@
 {
-	"name": "pimlico-webhook",
-	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
 		"lint": "biome check --error-on-warnings .",
 		"format": "biome format --write .",
-		"webhook-verifier": "pnpm --filter @pimlico/webhook-verifier",
-		"example": "pnpm --filter @pimlico/example"
+		"webhook": "pnpm --filter @pimlico/webhook",
+		"build": "pnpm webhook build",
+		"clean": "rimraf ./packages/*/node_modules ./packages/*/_cjs ./packages/*/_esm ./packages/*/_types ./packages/*/dist ./packages/*/node_modules ./node_modules"
 	},
+	"private": true,
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Pimlico",
+	"license": "MIT",
 	"engines": {
 		"node": ">=20.0.0"
 	},
 	"type": "module",
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4"
+		"@biomejs/biome": "1.9.4",
+		"@types/node": "^20.11.18",
+		"rimraf": "^6.0.1",
+		"tsc-alias": "^1.8.10"
 	}
 }

@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { KeyFetcher, KeyFetcherOptions } from "./types";
+import type { KeyFetcher, KeyFetcherOptions } from "./types";
 
 
 const keysBaseURL = "https://api-staging.pimlico.io/webhook-public-key";
@@ -26,7 +26,7 @@ export class KeyCache {
 }
 
 export const keyFetcher = (apiKey: string, options: KeyFetcherOptions = {}): KeyFetcher => {
-    const fetch = options?.fetch ?? global.fetch;
+    const fetch = options?.fetch ?? (() => Promise.reject(new Error("no fetch function provided")));
     const keyCache = options?.cache ?? new KeyCache(60 * 60 * 1000);
 
     const normalBaseURL = (options?.baseURL ?? keysBaseURL).replace(/\/$/, "");

@@ -1,5 +1,5 @@
 import * as crypto from "crypto";
-import { PimlicoSponsorshipPolicyWebhookBody } from "./types";
+import type { PimlicoSponsorshipPolicyWebhookBody } from "./types";
 import { keyFetcher } from "./key-fetcher";
 
 export const pimlicoWebhookVerifier = (apiKey: string) => async (headers: Record<string, string>, body: Buffer) => {
