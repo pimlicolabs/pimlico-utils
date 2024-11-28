@@ -2,7 +2,7 @@ import * as crypto from "crypto";
 import { KeyFetcher, KeyFetcherOptions } from "./types";
 
 
-const keysBaseURL = "https://api.pimlico.io/webhook-key";
+const keysBaseURL = "https://api-staging.pimlico.io/webhook-public-key";
 
 export class KeyCache {
     private cache = new Map<string, crypto.KeyObject>();
@@ -31,32 +31,32 @@ export const keyFetcher = (apiKey: string, options: KeyFetcherOptions = {}): Key
 
     const normalBaseURL = (options?.baseURL ?? keysBaseURL).replace(/\/$/, "");
 
-    return (version: string) =>
-        new Promise(async (res) =>
-            res(
-                (keyCache.get(version)) ??
-                fetch(`${normalBaseURL}/${version}?apiKey=${apiKey}`).then(async (r) => {
-                    if (!r.ok) {
-                        return Promise.reject(
-                            new Error(`error fetching key: ${r.status}`)
-                        );
-                    }
+    return async () => {
+        const cachedKey = keyCache.get('key');
 
-                    if (!r.body) {
-                        return Promise.reject(
-                            new Error("error fetching key: empty response")
-                        );
-                    }
+        if (cachedKey) {
+            return cachedKey;
+        }
 
-                    const keyBytes = await r.arrayBuffer();
-                    const key = crypto.createPublicKey(Buffer.from(keyBytes));
+        const url = `${normalBaseURL}?apikey=${apiKey}`;
 
-                    keyCache.set(version, key);
+        const response = await fetch(url);
 
-                    return key;
-                })
-            )
-        );
+        if (!response.ok) {
+            return Promise.reject(new Error(`error fetching key: ${response.status}`));
+        }
+
+        if (!response.body) {
+            return Promise.reject(new Error("error fetching key: empty response"));
+        }
+
+        const keyBytes = await response.arrayBuffer();
+        const key = crypto.createPublicKey(Buffer.from(keyBytes));
+
+        keyCache.set('key', key);
+
+        return key;
+    };
 };
 
 export { keyFetcher as pimlicoKeyFetcher };

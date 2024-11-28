@@ -10,7 +10,11 @@
 		"build": "tsc"
 	},
 	"devDependencies": {
+		"@types/node": "^20.11.18",
 		"typescript": "^5.7.2",
-		"@types/node": "^20.11.18"
+		"viem": "^2.21.52"
+	},
+	"peerDependencies": {
+		"viem": "^2.21.52"
 	}
 }
