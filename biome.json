@@ -1,41 +1,44 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-	"vcs": {
-		"enabled": false,
-		"clientKind": "git",
-		"useIgnoreFile": false
-	},
-	"files": {
-		"ignoreUnknown": false,
-		"ignore": [
-			"node_modules",
-			"**/node_modules",
-			"cache",
-			"coverage",
-			"tsconfig.json",
-			"tsconfig.*.json",
-			"_cjs",
-			"_esm",
-			"_types",
-			"bun.lockb"
-		]
-	},
-	"formatter": {
-		"enabled": true,
-		"indentStyle": "tab"
-	},
-	"organizeImports": {
-		"enabled": true
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "double"
-		}
-	}
+    "$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
+    "files": {
+        "ignore": [
+            "node_modules",
+            "**/node_modules",
+            "cache",
+            "coverage",
+            "tsconfig.json",
+            "tsconfig.*.json",
+            "_cjs",
+            "_esm",
+            "_types"
+        ]
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noExplicitAny": "warn"
+            },
+            "style": {
+                "noUnusedTemplateLiteral": "warn"
+            }
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": true,
+        "lineWidth": 80,
+        "indentWidth": 4,
+        "indentStyle": "space"
+    },
+    "javascript": {
+        "formatter": {
+            "semicolons": "asNeeded",
+            "trailingCommas": "none"
+        }
+    }
 }
