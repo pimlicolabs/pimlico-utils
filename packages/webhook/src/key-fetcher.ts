@@ -1,7 +1,7 @@
 import * as crypto from "node:crypto"
 import type { KeyFetcher, KeyFetcherOptions } from "./types"
 
-const keysBaseURL = "https://api-staging.pimlico.io/webhook-public-key"
+const keysBaseURL = "https://api.pimlico.io/webhook-public-key"
 
 export class KeyCache {
     private cache = new Map<string, crypto.KeyObject>()
