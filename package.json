@@ -26,6 +26,7 @@
         "@changesets/cli": "^2.27.10",
         "@types/node": "^20.11.18",
         "rimraf": "^6.0.1",
+        "size-limit": "^11.1.6",
         "tsc-alias": "^1.8.10"
     }
 }
