@@ -26,12 +26,18 @@ importers:
       '@types/node':
         specifier: ^20.11.18
         version: 20.17.8
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
       size-limit:
         specifier: ^11.1.6
         version: 11.1.6
+      size-limit-node-esbuild:
+        specifier: ^0.3.0
+        version: 0.3.0
       tsc-alias:
         specifier: ^1.8.10
         version: 1.8.10
@@ -411,6 +417,10 @@ packages:
 
   '@sinclair/typebox@0.25.24':
     resolution: {integrity: sha512-XJfwUVUKDHF5ugKwIcxEgc9k8b7HbznCp6eUfWgu710hMPNIO4aw4/zB5RogDQz8nd6gyCDpU9O/m6qYEWY6yQ==}
+
+  '@sindresorhus/merge-streams@2.3.0':
+    resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
+    engines: {node: '>=18'}
 
   '@size-limit/esbuild@11.1.6':
     resolution: {integrity: sha512-0nBKYSxeRjUVCVoCkWZbmGkGBwpm0HdwHedWgxksBGxTKU0PjOMSHc3XTjKOrXBKXQzw90Ue0mgOd4n6zct9SA==}
@@ -1066,6 +1076,10 @@ packages:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
 
+  globby@14.0.2:
+    resolution: {integrity: sha512-s3Fq41ZVh7vbbe2PN3nrW7yC7U7MFVc5c98/iTl9c2GawNMKx/J648KQRW6WKkuU8GIbbh2IXfIRQjOZnXcTnw==}
+    engines: {node: '>=18'}
+
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
@@ -1178,6 +1192,10 @@ packages:
 
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+
+  lilconfig@2.1.0:
+    resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
+    engines: {node: '>=10'}
 
   lilconfig@3.1.2:
     resolution: {integrity: sha512-eop+wDAvpItUys0FWkHIKeC9ybYrTGbU41U5K7+bttZZeohvnY7M9dZ5kB21GNWiFT2q1OoPTvncPCgSOVO5ow==}
@@ -1429,6 +1447,10 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
+  path-type@5.0.0:
+    resolution: {integrity: sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==}
+    engines: {node: '>=12'}
+
   pend@1.2.0:
     resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
 
@@ -1573,6 +1595,15 @@ packages:
     resolution: {integrity: sha512-MY2/qGx4enyjprQnFaZsHib3Yadh3IXyV2C321GY0pjGfVBu4un0uDJkwgdxqO+Rdx8JMT8IfJIRwbYVz3Ob3Q==}
     engines: {node: '>=14'}
 
+  size-limit-node-esbuild@0.3.0:
+    resolution: {integrity: sha512-wgKcHikiJLnz9pTzZsJXBUaFzWnZsVftmHLKu6eJJx2+wh0EgyzIPhOad/FFVBhErDacAmR4FYD3tgEagr033g==}
+    engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  size-limit@10.0.3:
+    resolution: {integrity: sha512-5k1k2Kykueq5K/PJQclKx2GS1prz4WNNvm+x5CQ2oWLHwmuFnb1z1g412O9aoOFqafXicJTZgZHXRyIe2GZQfA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+
   size-limit@11.1.6:
     resolution: {integrity: sha512-S5ux2IB8rU26xwVgMskmknGMFkieaIAqDLuwgKiypk6oa4lFsie8yFPrzRFV+yrLDY2GddjXuCaVk5PveVOHiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -1581,6 +1612,10 @@ packages:
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
+
+  slash@5.1.0:
+    resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
+    engines: {node: '>=14.16'}
 
   spawndamnit@3.0.1:
     resolution: {integrity: sha512-MmnduQUuHCoFckZoWnXsTg7JaiLBJrKFj9UI2MbRPGaJeVpsLcVBu6P/IGZovziM/YBsellCmsprgNA+w0CzVg==}
@@ -1691,6 +1726,9 @@ packages:
     resolution: {integrity: sha512-Ibv4KAWfFkFdKJxnWfVtdOmB0Zi1RJVxcbPGiCDsFpCQSsmpWyuzHG3rQyI5YkobWwxFPEyQfu1hdo4qLG2zPw==}
     hasBin: true
 
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   typescript@4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
     engines: {node: '>=4.2.0'}
@@ -1710,6 +1748,10 @@ packages:
   undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
+
+  unicorn-magic@0.1.0:
+    resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
+    engines: {node: '>=18'}
 
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -2198,6 +2240,8 @@ snapshots:
       '@scure/base': 1.1.9
 
   '@sinclair/typebox@0.25.24': {}
+
+  '@sindresorhus/merge-streams@2.3.0': {}
 
   '@size-limit/esbuild@11.1.6(size-limit@11.1.6)':
     dependencies:
@@ -2941,6 +2985,15 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
+  globby@14.0.2:
+    dependencies:
+      '@sindresorhus/merge-streams': 2.3.0
+      fast-glob: 3.3.2
+      ignore: 5.3.2
+      path-type: 5.0.0
+      slash: 5.1.0
+      unicorn-magic: 0.1.0
+
   graceful-fs@4.2.11: {}
 
   has-unicode@2.0.1: {}
@@ -3044,6 +3097,8 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  lilconfig@2.1.0: {}
 
   lilconfig@3.1.2: {}
 
@@ -3247,6 +3302,8 @@ snapshots:
 
   path-type@4.0.0: {}
 
+  path-type@5.0.0: {}
+
   pend@1.2.0: {}
 
   picocolors@1.0.0: {}
@@ -3359,6 +3416,21 @@ snapshots:
 
   signal-exit@4.0.2: {}
 
+  size-limit-node-esbuild@0.3.0:
+    dependencies:
+      nanoid: 5.0.9
+      size-limit: 10.0.3
+      tslib: 2.8.1
+
+  size-limit@10.0.3:
+    dependencies:
+      bytes-iec: 3.1.1
+      chokidar: 3.6.0
+      globby: 14.0.2
+      lilconfig: 2.1.0
+      nanospinner: 1.2.0
+      picocolors: 1.1.1
+
   size-limit@11.1.6:
     dependencies:
       bytes-iec: 3.1.1
@@ -3370,6 +3442,8 @@ snapshots:
       tinyglobby: 0.2.10
 
   slash@3.0.0: {}
+
+  slash@5.1.0: {}
 
   spawndamnit@3.0.1:
     dependencies:
@@ -3498,6 +3572,8 @@ snapshots:
       normalize-path: 3.0.0
       plimit-lit: 1.6.1
 
+  tslib@2.8.1: {}
+
   typescript@4.9.5: {}
 
   typescript@5.7.2: {}
@@ -3509,6 +3585,8 @@ snapshots:
   undici@5.28.4:
     dependencies:
       '@fastify/busboy': 2.1.1
+
+  unicorn-magic@0.1.0: {}
 
   universalify@0.1.2: {}
 

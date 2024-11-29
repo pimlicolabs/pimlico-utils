@@ -27,14 +27,24 @@
         "@changesets/cli": "^2.27.10",
         "@size-limit/preset-small-lib": "^11.1.6",
         "@types/node": "^20.11.18",
+        "esbuild": "^0.24.0",
         "rimraf": "^6.0.1",
         "size-limit": "^11.1.6",
+        "size-limit-node-esbuild": "^0.3.0",
         "tsc-alias": "^1.8.10"
     },
-    "size-limit": {
-        "name": "@pimlico/webhook (esm)",
-        "path": "./packages/webhook/_esm/index.js",
-        "limit": "50 kB",
-        "import": "*"
-    }
+    "size-limit": [
+        {
+            "name": "@pimlico/webhook (esm)",
+            "path": "./packages/webhook/_esm/src/index.js",
+            "limit": "50 kB",
+            "import": "*"
+        },
+        {
+            "name": "@pimlico/webhook (cjs)",
+            "path": "./packages/webhook/_cjs/src/index.js",
+            "limit": "250 kB",
+            "import": "*"
+        }
+    ]
 }
