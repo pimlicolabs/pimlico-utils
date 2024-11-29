@@ -10,6 +10,9 @@
     "sideEffects": false,
     "description": "A utility library for working with Pimlico webhooks.",
     "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
     "exports": {
         ".": {
             "types": "./_types/index.d.ts",
