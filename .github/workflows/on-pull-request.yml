@@ -44,8 +44,11 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
 
-      - name: Report bundle size
-        uses: andresz1/size-limit-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # package_manager: pnpm
+      - name: Size
+        run: pnpm size
+
+      # - name: Report bundle size
+      #   uses: andresz1/size-limit-action@master
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     # package_manager: pnpm
