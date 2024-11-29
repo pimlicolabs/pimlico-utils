@@ -1,40 +1,23 @@
-import * as crypto from "node:crypto"
-import { keyFetcher } from "./key-fetcher"
 import type { PimlicoSponsorshipPolicyWebhookBody } from "./types"
+import basex from "base-x"
+import { Webhook } from "svix"
 
-export const pimlicoWebhookVerifier =
-    (apiKey: string) =>
-    async (headers: Record<string, string>, body: Buffer) => {
-        const fetchKey = keyFetcher(apiKey)
+const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvxyz" // no 'w', it's used for padding only
 
-        if (!Buffer.isBuffer(body)) {
-            throw new Error("expected body to be a Buffer")
-        }
+const bs58 = basex(ALPHABET)
 
-        if (process.env.UNSAFE_SKIP_WEBHOOK_VERIFY != null) {
-            return JSON.parse(
-                body.toString()
-            ) as PimlicoSponsorshipPolicyWebhookBody
-        }
+export const pimlicoWebhookVerifier = (webhookSecret: string) => {
+    const webhookSecretHex = Buffer.from(bs58.decode(webhookSecret)).toString("hex")
 
-        if (!body || body.length === 0) {
+    const verify = (headers: Record<string, string>, payload: string) => {
+        const wh = new Webhook(webhookSecretHex)
+
+        if (!payload || payload.length === 0) {
             throw new Error("invalid webhook: empty payload")
         }
 
-        const key = await fetchKey()
-
-        const signature = Buffer.from(
-            headers["pimlico-signature"] ?? "",
-            "base64"
-        )
-
-        const message = Buffer.concat([body])
-
-        if (!crypto.verify("sha256", message, key, signature)) {
-            throw new Error("invalid webhook: signature validation failed")
-        }
-
-        return JSON.parse(
-            body.toString()
-        ) as PimlicoSponsorshipPolicyWebhookBody
+        return wh.verify(payload, headers) as PimlicoSponsorshipPolicyWebhookBody
     }
+
+    return verify
+}

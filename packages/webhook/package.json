@@ -31,5 +31,9 @@
     },
     "peerDependencies": {
         "viem": "^2.21.52"
+    },
+    "dependencies": {
+        "base-x": "^5.0.0",
+        "svix": "^1.42.0"
     }
 }

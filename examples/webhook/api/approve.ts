@@ -1,14 +1,14 @@
 import { pimlicoWebhookVerifier } from "@pimlico/webhook"
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
-const apiKey = process.env.PIMLICO_API_KEY as string
+const webhookSecret = process.env.PIMLICO_WEBHOOK_SECRET as string
 
-const verifyWebhook = pimlicoWebhookVerifier(apiKey)
+const verifyWebhook = pimlicoWebhookVerifier(webhookSecret)
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const body = await verifyWebhook(
         req.headers as Record<string, string>,
-        Buffer.from(JSON.stringify(req.body))
+        JSON.stringify(req.body)
     )
 
     return res.status(200).json({
