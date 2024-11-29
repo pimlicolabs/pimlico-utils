@@ -28,7 +28,7 @@ jobs:
           npm view $PACKAGE_NAME dist-tags --json | jq -r 'to_entries | .[] | select(.key != "latest") | select(.key != "main") | select(.key != "next") | .key' | xargs -I % npm dist-tag rm $PACKAGE_NAME %
         working-directory: packages/webhook
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILITIES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}
 
       - name: Deprecate @pimlico/webhook canary versions
         working-directory: packages/webhook
@@ -54,7 +54,7 @@ jobs:
             fi
           done
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILITIES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}
 
         run: |
           PACKAGE_NAME=$(jq -r '.name' package.json)
@@ -62,7 +62,7 @@ jobs:
           npm view $PACKAGE_NAME dist-tags --json | jq -r 'to_entries | .[] | select(.key != "latest") | select(.key != "main") | select(.key != "next") | .key' | xargs -I % npm dist-tag rm $PACKAGE_NAME %
         working-directory: packages/webhook
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILITIES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}
 
         run: |
           PACKAGE_NAME=$(jq -r '.name' package.json)
@@ -86,4 +86,4 @@ jobs:
             fi
           done
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILITIES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}

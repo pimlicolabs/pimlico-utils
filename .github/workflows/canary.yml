@@ -35,4 +35,4 @@ jobs:
       - name: Publish @pimlico/webhook to npm
         run: cd packages/webhook && npm publish --tag $(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//')
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILITIES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}
