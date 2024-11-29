@@ -2,6 +2,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "size": "size-limit",
         "lint": "biome check --fix --error-on-warnings .",
         "format": "biome format --write .",
         "webhook": "pnpm --filter @pimlico/webhook",
@@ -24,10 +25,16 @@
         "@changesets/changelog-git": "^0.2.0",
         "@changesets/changelog-github": "^0.5.0",
         "@changesets/cli": "^2.27.10",
+        "@size-limit/preset-small-lib": "^11.1.6",
         "@types/node": "^20.11.18",
         "rimraf": "^6.0.1",
-        "@size-limit/preset-small-lib": "^9.0.0",
         "size-limit": "^11.1.6",
         "tsc-alias": "^1.8.10"
+    },
+    "size-limit": {
+        "name": "@pimlico/webhook (esm)",
+        "path": "./packages/webhook/_esm/index.js",
+        "limit": "50 kB",
+        "import": "*"
     }
 }
