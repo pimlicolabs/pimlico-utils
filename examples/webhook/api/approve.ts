@@ -1,4 +1,4 @@
-import { pimlicoWebhookVerifier } from "@pimlico/webhook";
+import { pimlicoWebhookVerifier } from "@pimlico/webhook"
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
 const webhookSecret = process.env.PIMLICO_WEBHOOK_SECRET as string
