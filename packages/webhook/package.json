@@ -7,23 +7,16 @@
     "types": "./_types/index.d.ts",
     "typings": "./_types/index.d.ts",
     "type": "module",
-    "sideEffects": false,
+    "sideEffects": true,
     "description": "A utility library for working with Pimlico webhooks.",
     "license": "MIT",
     "publishConfig": {
         "access": "public"
     },
-    "exports": {
-        ".": {
-            "types": "./_types/index.d.ts",
-            "import": "./_esm/index.js",
-            "default": "./_cjs/index.js"
-        }
-    },
     "scripts": {
         "build": "pnpm build:cjs && pnpm build:esm",
         "build:cjs": "tsc --project ./../../tsconfig/tsconfig.webhook.cjs.json && tsc-alias -p ./../../tsconfig/tsconfig.webhook.cjs.json && printf '{\"type\":\"commonjs\"}' > ./_cjs/package.json",
-        "build:esm": "tsc --project ./../../tsconfig/tsconfig.webhook.esm.json && tsc-alias -p ./../../tsconfig/tsconfig.webhook.esm.json && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./_esm/package.json"
+        "build:esm": "tsc --project ./../../tsconfig/tsconfig.webhook.esm.json && tsc-alias -p ./../../tsconfig/tsconfig.webhook.esm.json && printf '{\"type\": \"module\",\"sideEffects\":true}' > ./_esm/package.json"
     },
     "devDependencies": {
         "typescript": "^5.7.2",

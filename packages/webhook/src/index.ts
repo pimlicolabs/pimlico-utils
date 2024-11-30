@@ -7,7 +7,7 @@ const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvxyz" // 
 const bs58 = basex(ALPHABET)
 
 export const pimlicoWebhookVerifier = (webhookSecret: string) => {
-    const webhookSecretHex = Buffer.from(bs58.decode(webhookSecret)).toString("hex")
+    const webhookSecretHex = Buffer.from(bs58.decode(webhookSecret.replace("pim_whsec_", ""))).toString("hex")
 
     const verify = (headers: Record<string, string>, payload: string) => {
         const wh = new Webhook(webhookSecretHex)

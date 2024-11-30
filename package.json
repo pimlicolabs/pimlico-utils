@@ -1,4 +1,6 @@
 {
+    "name": "pimlico-webhook",
+    "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -7,7 +9,7 @@
         "format": "biome format --write .",
         "webhook": "pnpm --filter @pimlico/webhook",
         "build": "pnpm webhook build",
-        "clean": "rimraf ./packages/*/node_modules ./packages/*/_cjs ./packages/*/_esm ./packages/*/_types ./packages/*/dist ./packages/*/node_modules ./node_modules",
+        "clean": "rimraf ./packages/*/node_modules ./packages/*/_cjs ./packages/*/_esm ./packages/*/_types ./packages/*/dist ./packages/*/node_modules ./node_modules ./examples/*/node_modules",
         "changeset": "changeset",
         "changeset:release": "pnpm build && changeset publish",
         "changeset:version": "changeset version && pnpm install --lockfile-only"
@@ -21,6 +23,7 @@
     },
     "type": "module",
     "devDependencies": {
+        "tslib": "^2.6.2",
         "@biomejs/biome": "1.9.4",
         "@changesets/changelog-git": "^0.2.0",
         "@changesets/changelog-github": "^0.5.0",
@@ -46,5 +49,6 @@
             "limit": "50 kB",
             "import": "*"
         }
-    ]
+    ],
+    "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }
