@@ -10,13 +10,4 @@ pnpm install @pimlico/webhook
 
 ## Usage
 
-```typescript
-import { pimlicoWebhookVerifier } from "@pimlico/webhook"
-
-const verifyWebhook = pimlicoWebhookVerifier(process.env.PIMLICO_API_KEY)
-
-const body = await verifyWebhook(
-    req.headers as Record<string, string>,
-    Buffer.from(JSON.stringify(req.body))
-)
-```
+Check out the [example](./../../examples/webhook/api/approve.ts) repo for more details.
