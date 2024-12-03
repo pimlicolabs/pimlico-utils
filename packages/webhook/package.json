@@ -13,13 +13,6 @@
     "publishConfig": {
         "access": "public"
     },
-    "exports": {
-        ".": {
-            "types": "./_types/index.d.ts",
-            "import": "./_esm/index.js",
-            "default": "./_cjs/index.js"
-        }
-    },
     "scripts": {
         "build": "pnpm build:cjs && pnpm build:esm",
         "build:cjs": "tsc --project ./../../tsconfig/tsconfig.webhook.cjs.json && tsc-alias -p ./../../tsconfig/tsconfig.webhook.cjs.json && printf '{\"type\":\"commonjs\"}' > ./_cjs/package.json",
@@ -31,5 +24,9 @@
     },
     "peerDependencies": {
         "viem": "^2.21.52"
+    },
+    "dependencies": {
+        "base-x": "^5.0.0",
+        "svix": "^1.42.0"
     }
 }
