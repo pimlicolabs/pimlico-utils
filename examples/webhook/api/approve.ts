@@ -11,7 +11,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         JSON.stringify(req.body)
     )
 
-    console.log('webhookEvent')
+    console.log("webhookEvent")
     console.log(JSON.stringify(webhookEvent, null, 2))
 
     return res.status(200).json({

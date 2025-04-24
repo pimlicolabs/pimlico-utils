@@ -4,7 +4,9 @@ import type { UserOperation } from "viem/account-abstraction"
 export type PimlicoWebhookBody = PimlicoSponsorshipPolicyWebhookBody
 
 export type PimlicoSponsorshipPolicyWebhookBody = {
-    type: "user_operation.sponsorship.requested" | "user_operation.sponsorship.finalized"
+    type:
+        | "user_operation.sponsorship.requested"
+        | "user_operation.sponsorship.finalized"
     data: {
         object: {
             userOperation: UserOperation
@@ -12,7 +14,7 @@ export type PimlicoSponsorshipPolicyWebhookBody = {
             chainId: number
             sponsorshipPolicyId: string
             apiKey: string
-            paymasterContext: any
+            paymasterContext: unknown
         }
     }
 }
