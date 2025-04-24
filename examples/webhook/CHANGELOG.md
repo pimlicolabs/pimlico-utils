@@ -1,5 +1,12 @@
 # @pimlico/example
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [6d9b8eb]
+  - @pimlico/webhook@0.0.4
+
 ## 1.0.2
 
 ### Patch Changes
