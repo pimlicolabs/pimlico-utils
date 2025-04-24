@@ -1,5 +1,11 @@
 # @pimlico/webhook
 
+## 0.0.4
+
+### Patch Changes
+
+- 6d9b8eb: Updated event types
+
 ## 0.0.3
 
 ### Patch Changes
