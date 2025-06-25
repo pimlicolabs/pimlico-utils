@@ -1,6 +1,6 @@
 {
     "name": "@pimlico/cli",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Pimlico",
     "description": "Command-line helper to quickly set up Pimlico API keys locally.",
     "bin": {
