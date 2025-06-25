@@ -8,7 +8,8 @@
         "lint": "biome check --fix --error-on-warnings .",
         "format": "biome format --write .",
         "webhook": "pnpm --filter @pimlico/webhook",
-        "build": "pnpm webhook build",
+        "cli": "pnpm --filter pimlico-cli",
+        "build": "pnpm webhook build && pnpm cli build",
         "clean": "rimraf ./packages/*/node_modules ./packages/*/_cjs ./packages/*/_esm ./packages/*/_types ./packages/*/dist ./packages/*/node_modules ./node_modules ./examples/*/node_modules",
         "changeset": "changeset",
         "changeset:release": "pnpm build && changeset publish",
@@ -49,5 +50,6 @@
             "limit": "50 kB",
             "import": "*"
         }
-    ]
+    ],
+    "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }

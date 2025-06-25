@@ -57,6 +57,12 @@ importers:
         specifier: ^34.2.7
         version: 34.4.0
 
+  packages/cli:
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+
   packages/webhook:
     dependencies:
       base-x:
