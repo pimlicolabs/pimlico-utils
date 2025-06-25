@@ -4,3 +4,4 @@ dist
 _cjs
 _esm
 _types
+.env

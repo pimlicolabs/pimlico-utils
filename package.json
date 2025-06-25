@@ -8,7 +8,8 @@
         "lint": "biome check --fix --error-on-warnings .",
         "format": "biome format --write .",
         "webhook": "pnpm --filter @pimlico/webhook",
-        "build": "pnpm webhook build",
+        "cli": "pnpm --filter @pimlico/cli",
+        "build": "pnpm webhook build && pnpm cli build",
         "clean": "rimraf ./packages/*/node_modules ./packages/*/_cjs ./packages/*/_esm ./packages/*/_types ./packages/*/dist ./packages/*/node_modules ./node_modules ./examples/*/node_modules",
         "changeset": "changeset",
         "changeset:release": "pnpm build && changeset publish",
@@ -23,7 +24,6 @@
     },
     "type": "module",
     "devDependencies": {
-        "tslib": "^2.6.2",
         "@biomejs/biome": "1.9.4",
         "@changesets/changelog-git": "^0.2.0",
         "@changesets/changelog-github": "^0.5.0",
@@ -34,20 +34,25 @@
         "rimraf": "^6.0.1",
         "size-limit": "^11.1.6",
         "size-limit-node-esbuild": "^0.3.0",
-        "tsc-alias": "^1.8.10"
+        "tsc-alias": "^1.8.10",
+        "tslib": "^2.6.2"
     },
     "size-limit": [
         {
             "name": "@pimlico/webhook (esm)",
             "path": "./packages/webhook/_esm/src/index.js",
-            "limit": "50 kB",
+            "limit": "100 kB",
             "import": "*"
         },
         {
             "name": "@pimlico/webhook (cjs)",
             "path": "./packages/webhook/_cjs/src/index.js",
-            "limit": "50 kB",
+            "limit": "100 kB",
             "import": "*"
         }
-    ]
+    ],
+    "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
+    "dependencies": {
+        "ts-node": "^10.9.2"
+    }
 }
