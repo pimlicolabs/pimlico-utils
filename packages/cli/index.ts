@@ -8,72 +8,71 @@ import {
     createServer
 } from "node:http"
 import * as path from "node:path"
-import yargs from "yargs"
-import { hideBin } from "yargs/helpers"
+import { Command } from "commander"
 
-// Parse CLI arguments using yargs to provide robust help for LLMs (and humans!)
-const argv = yargs(hideBin(process.argv))
-    .scriptName("@pimlico/cli")
-    .usage(
-        "$0 [options]",
+// Parse CLI arguments using Commander (more tolerant with URLs containing "://")
+const program = new Command()
+    .name("@pimlico/cli")
+    .usage("[options]")
+    .addHelpText(
+        "before",
         [
             "Starts a temporary local HTTP server, opens the Pimlico Dashboard",
             "setup page in your browser, waits for the generated API key, and",
-            "saves it to a .env file. Can set up the passkey server for the project."
-        ].join(" \n")
+            "saves it to a .env file. Can set up the passkey server for the project.",
+            ""
+        ].join("\n")
     )
-    .option("site-name", {
-        alias: ["name", "n"],
-        type: "string",
-        description:
-            "Human-readable name of your dApp / site (used in the passkey server)",
-        default: "My dApp"
-    })
-    .option("origin", {
-        alias: ["o"],
-        type: "string",
-        description:
-            "The origin (protocol + host) your dApp will run on (used in the passkey server)",
-        default: "http://localhost"
-    })
-    .option("no-open", {
-        alias: ["x"],
-        type: "boolean",
-        description: "Skip automatically opening the browser window",
-        default: false
-    })
-    .option("key-var", {
-        alias: ["k"],
-        type: "string",
-        description: "Environment variable name to store the Pimlico API key",
-        default: "PIMLICO_API_KEY"
-    })
-    .option("env-path", {
-        alias: ["f", "env-file"],
-        type: "string",
-        description: "Path to the .env file to update (relative or absolute)",
-        default: ".env"
-    })
-    .option("setup-passkey-server", {
-        alias: ["p"],
-        type: "boolean",
-        description: "Also set up a passkey server for the project",
-        default: false
-    })
-    .option("dashboard-base-url", {
-        alias: ["d", "dashboard-url"],
-        type: "string",
-        description: "Pimlico Dashboard base URL (protocol + host)",
-        default: "https://dashboard.pimlico.io"
-    })
-    .example(
-        "$0 --site-name 'Awesome dApp' --origin https://example.com",
-        "Generates an API key for https://example.com titled 'Awesome dApp'."
+    .option(
+        "-n, --site-name <string>",
+        "Human-readable name of your dApp / site (used in the passkey server)",
+        "My dApp"
     )
-    .epilog("For full documentation visit https://docs.pimlico.io")
-    .help()
-    .strict()
-    .parseSync()
+    .option(
+        "-o, --origin <string>",
+        "The origin (protocol + host) your dApp will run on (used in the passkey server)",
+        "http://localhost"
+    )
+    .option("-x, --no-open", "Skip automatically opening the browser window")
+    .option(
+        "-k, --key-var <string>",
+        "Environment variable name to store the Pimlico API key",
+        "PIMLICO_API_KEY"
+    )
+    .option(
+        "-f, --env-path <string>",
+        "Path to the .env file to update (relative or absolute)",
+        ".env"
+    )
+    .option(
+        "-p, --setup-passkey-server",
+        "Also set up a passkey server for the project"
+    )
+    .option(
+        "-d, --dashboard-base-url <string>",
+        "Pimlico Dashboard base URL (protocol + host)",
+        "https://dashboard.pimlico.io"
+    )
+    .addHelpText(
+        "after",
+        "\nFor full documentation visit https://docs.pimlico.io"
+    )
+    .allowUnknownOption(false)
+
+program.parse(process.argv)
+
+type CliOptions = {
+    siteName: string
+    origin: string
+    keyVar: string
+    envPath: string
+    setupPasskeyServer: boolean
+    dashboardBaseUrl: string
+    open: boolean
+}
+
+// Commander camel-cases option names automatically (e.g. --site-name -> siteName)
+const argv = program.opts<CliOptions>()
 
 // Generate a link to the dashboard setup page
 function generateSetupLink(options: {
@@ -138,12 +137,12 @@ function openBrowser(url: string) {
 }
 
 async function main() {
-    const siteName = argv["site-name"]
+    const siteName = argv.siteName
     const origin = argv.origin
-    const envVar = argv["key-var"]
-    const envPath = argv["env-path"]
-    const setupPasskey = argv["setup-passkey-server"]
-    const dashboardBaseUrl = argv["dashboard-base-url"]
+    const envVar = argv.keyVar
+    const envPath = argv.envPath
+    const setupPasskey = argv.setupPasskeyServer
+    const dashboardBaseUrl = argv.dashboardBaseUrl
 
     const server = createServer(
         (req: IncomingMessage, res: ServerResponse): void => {
@@ -193,7 +192,7 @@ async function main() {
             )
             console.log(link)
             console.log("\nWaiting for the dashboard to finish setup…")
-            if (!argv["no-open"]) {
+            if (argv.open !== false) {
                 openBrowser(link)
             }
         }

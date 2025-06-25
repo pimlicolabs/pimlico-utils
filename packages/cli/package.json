@@ -20,11 +20,10 @@
         "build:esm": "tsc --project ./../../tsconfig/tsconfig.cli.esm.json && tsc-alias -p ./../../tsconfig/tsconfig.cli.esm.json && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./_esm/package.json"
     },
     "dependencies": {
-        "yargs": "^17.7.2"
+        "commander": "^11.1.0"
     },
     "devDependencies": {
-        "typescript": "^5.7.2",
-        "@types/yargs": "^17.0.24"
+        "typescript": "^5.7.2"
     },
     "engines": {
         "node": ">=20.0.0"
