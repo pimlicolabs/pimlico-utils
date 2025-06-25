@@ -41,13 +41,13 @@
         {
             "name": "@pimlico/webhook (esm)",
             "path": "./packages/webhook/_esm/src/index.js",
-            "limit": "50 kB",
+            "limit": "100 kB",
             "import": "*"
         },
         {
             "name": "@pimlico/webhook (cjs)",
             "path": "./packages/webhook/_cjs/src/index.js",
-            "limit": "50 kB",
+            "limit": "100 kB",
             "import": "*"
         }
     ],

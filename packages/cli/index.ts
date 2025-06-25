@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
-import { createServer, IncomingMessage, ServerResponse } from "http"
-import * as fs from "fs"
-import * as path from "path"
-import { execSync } from "child_process"
+import { execSync } from "node:child_process"
+import * as fs from "node:fs"
+import {
+    type IncomingMessage,
+    type ServerResponse,
+    createServer
+} from "node:http"
+import * as path from "node:path"
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 
@@ -15,18 +19,21 @@ const argv = yargs(hideBin(process.argv))
         [
             "Starts a temporary local HTTP server, opens the Pimlico Dashboard",
             "setup page in your browser, waits for the generated API key, and",
-            "saves it to a .env file. Can set up the passkey server for the project."].join(" \n")
+            "saves it to a .env file. Can set up the passkey server for the project."
+        ].join(" \n")
     )
     .option("site-name", {
         alias: ["name", "n"],
         type: "string",
-        description: "Human-readable name of your dApp / site (used in the passkey server)",
+        description:
+            "Human-readable name of your dApp / site (used in the passkey server)",
         default: "My dApp"
     })
     .option("origin", {
         alias: ["o"],
         type: "string",
-        description: "The origin (protocol + host) your dApp will run on (used in the passkey server)",
+        description:
+            "The origin (protocol + host) your dApp will run on (used in the passkey server)",
         default: "http://localhost"
     })
     .option("no-open", {
@@ -69,12 +76,24 @@ const argv = yargs(hideBin(process.argv))
     .parseSync()
 
 // Generate a link to the dashboard setup page
-function generateSetupLink(options: { port: number; siteName: string; origin: string; setupPasskey: boolean; baseUrl: string }) {
-    const callbackUrl = encodeURIComponent(`http://localhost:${options.port}/callback`)
+function generateSetupLink(options: {
+    port: number
+    siteName: string
+    origin: string
+    setupPasskey: boolean
+    baseUrl: string
+}) {
+    const callbackUrl = encodeURIComponent(
+        `http://localhost:${options.port}/callback`
+    )
     const name = encodeURIComponent(options.siteName)
     const origin = encodeURIComponent(options.origin)
     const baseUrl = options.baseUrl
-    const params = [`callback=${callbackUrl}`, `name=${name}`, `origin=${origin}`]
+    const params = [
+        `callback=${callbackUrl}`,
+        `name=${name}`,
+        `origin=${origin}`
+    ]
     if (options.setupPasskey) params.push("passkey=1")
     return `${baseUrl}/cli-setup?${params.join("&")}`
 }
@@ -106,7 +125,12 @@ function updateEnvFile(envPathInput: string, envVar: string, apiKeyId: string) {
 function openBrowser(url: string) {
     try {
         // macOS, Linux, Windows
-        const startCmd = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open"
+        const startCmd =
+            process.platform === "darwin"
+                ? "open"
+                : process.platform === "win32"
+                  ? "start"
+                  : "xdg-open"
         execSync(`${startCmd} "${url}"`, { stdio: "ignore" })
     } catch {
         // If the command fails just ignore – the user still has the link printed
@@ -115,48 +139,58 @@ function openBrowser(url: string) {
 
 async function main() {
     const siteName = argv["site-name"]
-    const origin = argv["origin"]
+    const origin = argv.origin
     const envVar = argv["key-var"]
     const envPath = argv["env-path"]
     const setupPasskey = argv["setup-passkey-server"]
     const dashboardBaseUrl = argv["dashboard-base-url"]
 
-    const server = createServer((req: IncomingMessage, res: ServerResponse): void => {
-        if (!req.url) {
-            res.statusCode = 400
-            res.end("Invalid request")
-            return
-        }
-
-        if (req.url.startsWith("/callback")) {
-            const url = new URL(req.url, `http://localhost`)
-            const apiKey = url.searchParams.get("apikey")
-            res.statusCode = 200
-            res.setHeader("Content-Type", "text/plain")
-            if (apiKey) {
-                res.end("API key received! You can now close this tab.")
-                console.log(`\n✅  Received API key id: ${apiKey}`)
-                updateEnvFile(envPath, envVar, apiKey)
-                console.log(`${envPath} updated with ${envVar}`)
-                server.close()
-                // Quit after a short delay to allow stdout to flush
-                setTimeout(() => process.exit(0), 2000)
-            } else {
-                res.end("No apiKey param found in callback URL.")
+    const server = createServer(
+        (req: IncomingMessage, res: ServerResponse): void => {
+            if (!req.url) {
+                res.statusCode = 400
+                res.end("Invalid request")
+                return
             }
-            return
-        }
 
-        res.statusCode = 404
-        res.end()
-    })
+            if (req.url.startsWith("/callback")) {
+                const url = new URL(req.url, "http://localhost")
+                const apiKey = url.searchParams.get("apikey")
+                res.statusCode = 200
+                res.setHeader("Content-Type", "text/plain")
+                if (apiKey) {
+                    res.end("API key received! You can now close this tab.")
+                    console.log(`\n✅  Received API key id: ${apiKey}`)
+                    updateEnvFile(envPath, envVar, apiKey)
+                    console.log(`${envPath} updated with ${envVar}`)
+                    server.close()
+                    // Quit after a short delay to allow stdout to flush
+                    setTimeout(() => process.exit(0), 2000)
+                } else {
+                    res.end("No apiKey param found in callback URL.")
+                }
+                return
+            }
+
+            res.statusCode = 404
+            res.end()
+        }
+    )
 
     server.listen(0, "127.0.0.1", () => {
         const addressInfo = server.address()
         if (addressInfo && typeof addressInfo === "object") {
             const port = addressInfo.port
-            const link = generateSetupLink({ port, siteName, origin, setupPasskey, baseUrl: dashboardBaseUrl })
-            console.log("👉  Open the following link in your browser to complete setup:\n")
+            const link = generateSetupLink({
+                port,
+                siteName,
+                origin,
+                setupPasskey,
+                baseUrl: dashboardBaseUrl
+            })
+            console.log(
+                "👉  Open the following link in your browser to complete setup:\n"
+            )
             console.log(link)
             console.log("\nWaiting for the dashboard to finish setup…")
             if (!argv["no-open"]) {
@@ -169,4 +203,4 @@ async function main() {
 main().catch((err) => {
     console.error(err)
     process.exit(1)
-}) 
+})
