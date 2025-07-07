@@ -1,7 +1,6 @@
 import basex from "base-x"
 import { Webhook } from "svix"
 import type { Address, Hex } from "viem"
-import type { PimlicoSponsorshipPolicyWebhookBody } from "./types"
 import type { CalldataDecoder } from "./decoders/base"
 import { enableModulesDecoder } from "./decoders/enableModules"
 import { execBatchTransactionFromEntrypointDecoder } from "./decoders/execBatchTransactionFromEntrypoint"
@@ -26,6 +25,7 @@ import { executeWithFlagDecoder } from "./decoders/executeWithFlag"
 import { installModuleDecoder } from "./decoders/installModule"
 import { multiSendDecoder } from "./decoders/multiSend"
 import { transferDecoder } from "./decoders/transfer"
+import type { PimlicoSponsorshipPolicyWebhookBody } from "./types"
 
 const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvxyz" // no 'w', it's used for padding only
 
