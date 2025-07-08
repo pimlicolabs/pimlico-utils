@@ -27,7 +27,7 @@ export const multiSendDecoder: CalldataDecoder = (calldata: Hex) => {
             data: calldata
         })
 
-        const calls: { to: Hex; value: bigint; data: Hex }[] = []
+        const calls: { to: Address; value: bigint; data: Hex }[] = []
 
         // Remove 0x prefix for easier processing
         const txData = transactions.slice(2)

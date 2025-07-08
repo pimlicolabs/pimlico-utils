@@ -1,4 +1,4 @@
-import { type Address, type Hex, decodeFunctionData } from "viem"
+import { type Hex, decodeFunctionData } from "viem"
 import type { CalldataDecoder } from "./base"
 
 const EXECUTE_BATCH_SIMPLE_ABI = [

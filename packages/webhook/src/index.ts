@@ -80,13 +80,13 @@ const decoders: CalldataDecoder[] = [
 
 export const parseCallData = (
     callData: Hex
-): { to: Hex; value: bigint; data: Hex }[] => {
+): { to: Address; value: bigint; data: Hex }[] => {
     for (const decoder of decoders) {
         const results = decoder(callData)
 
         if (results === null) continue
 
-        const calls: { to: Hex; value: bigint; data: Hex }[] = []
+        const calls: { to: Address; value: bigint; data: Hex }[] = []
 
         for (const result of results) {
             calls.push(result)

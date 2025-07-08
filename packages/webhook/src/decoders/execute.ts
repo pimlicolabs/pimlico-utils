@@ -1,4 +1,4 @@
-import { type Address, type Hex, decodeFunctionData } from "viem"
+import { type Hex, decodeFunctionData } from "viem"
 import type { CalldataDecoder } from "./base"
 
 // https://openchain.xyz/signatures?query=0xb61d27f6

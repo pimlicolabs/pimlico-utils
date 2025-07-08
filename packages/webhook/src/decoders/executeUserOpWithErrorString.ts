@@ -1,6 +1,6 @@
 // function executeUserOpWithErrorString(address to, uint256 value, bytes memory data, uint8 operation) external onlySupportedEntryPoint {
 
-import { type Address, type Hex, decodeFunctionData } from "viem"
+import { type Hex, decodeFunctionData } from "viem"
 import type { CalldataDecoder } from "./base"
 
 const ABI = [

@@ -203,7 +203,7 @@ const decodeBatch = (
 const decodeDelegate = (
     executionCalldata: Hex
 ): {
-    to: Hex
+    to: Address
     data: Hex
     value: bigint
 } => {
