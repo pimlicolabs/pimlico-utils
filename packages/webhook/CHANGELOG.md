@@ -4,6 +4,12 @@
 
 ### Patch Changes
 
+- 5949fbb: Added callData decoder
+
+## 0.0.5
+
+### Patch Changes
+
 - 7e8e601: Added callData decoder
 
 ## 0.0.4
