@@ -34,16 +34,20 @@ const EXEC_BATCH_TRANSACTION_FROM_ENTRYPOINT_ABI = [
 
 export const execBatchTransactionFromEntrypointDecoder: CalldataDecoder = (
     calldata: Hex
-): [Address[], Hex[]] | null => {
+) => {
     try {
         const {
-            args: [targets, , datas]
+            args: [targets, values, data]
         } = decodeFunctionData({
             abi: EXEC_BATCH_TRANSACTION_FROM_ENTRYPOINT_ABI,
             data: calldata
         })
 
-        return [Array.from(targets), Array.from(datas)]
+        return targets.map((target, index) => ({
+            to: target,
+            value: values[index] ?? 0n,
+            data: data[index] ?? "0x"
+        }))
     } catch (e) {
         return null
     }

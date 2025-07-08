@@ -34,9 +34,7 @@ const EXECUTE_SINGLE_ABI = [
     }
 ] as const
 
-export const executeSingleDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeSingleDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [call]
@@ -45,7 +43,7 @@ export const executeSingleDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        return [[call.to], [call.data]]
+        return [call]
     } catch (e) {
         return null
     }

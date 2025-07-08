@@ -23,18 +23,16 @@ const ABI = [
     }
 ] as const
 
-export const transferDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const transferDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target]
+            args: [to, value]
         } = decodeFunctionData({
             abi: ABI,
             data: calldata
         })
 
-        return [[target], []]
+        return [{ to, value, data: "0x" }]
     } catch (e) {
         return null
     }

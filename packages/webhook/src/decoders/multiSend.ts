@@ -18,9 +18,7 @@ const ABI = [
 ] as const
 
 // MultiSend function signature: 0x8d80ff0a
-export const multiSendDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const multiSendDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [transactions]
@@ -29,8 +27,7 @@ export const multiSendDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        const targets: Address[] = []
-        const calldatas: Hex[] = []
+        const calls: { to: Hex; value: bigint; data: Hex }[] = []
 
         // Remove 0x prefix for easier processing
         const txData = transactions.slice(2)
@@ -48,6 +45,7 @@ export const multiSendDecoder: CalldataDecoder = (
 
             // 32 bytes for value
             // We don't need the value for our purposes
+            const value = BigInt(Number.parseInt(txData.slice(i, i + 64), 16))
             i += 64
 
             // 32 bytes for data length
@@ -58,12 +56,14 @@ export const multiSendDecoder: CalldataDecoder = (
             const data = `0x${txData.slice(i, i + dataLength)}` as Hex
             i += dataLength
 
-            // Add to our results
-            targets.push(to)
-            calldatas.push(data)
+            calls.push({
+                to,
+                value,
+                data
+            })
         }
 
-        return [targets, calldatas]
+        return calls
     } catch (e) {
         return null
     }

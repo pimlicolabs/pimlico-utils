@@ -34,9 +34,7 @@ const ABI = [
     }
 ] as const
 
-export const executeBySenderDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeBySenderDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [calls]
@@ -45,10 +43,7 @@ export const executeBySenderDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        const targets = calls.map((call) => call.to)
-        const calldatas = calls.map((call) => call.data)
-
-        return [targets, calldatas]
+        return calls.map((call) => ({ ...call }))
     } catch (e) {
         return null
     }

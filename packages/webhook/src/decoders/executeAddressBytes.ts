@@ -23,18 +23,22 @@ const EXECUTE_WITH_FLAG_ABI = [
     }
 ] as const
 
-export const executeAddressBytesDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeAddressBytesDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target, data]
+            args: [to, data]
         } = decodeFunctionData({
             abi: EXECUTE_WITH_FLAG_ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [
+            {
+                to,
+                value: 0n,
+                data
+            }
+        ]
     } catch (e) {
         return null
     }

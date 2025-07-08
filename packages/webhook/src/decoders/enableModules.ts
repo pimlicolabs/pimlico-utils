@@ -17,9 +17,7 @@ const ABI = [
     }
 ] as const
 
-export const enableModulesDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const enableModulesDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [targets]
@@ -28,7 +26,11 @@ export const enableModulesDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        return [Array.from(targets), []]
+        return targets.map((x) => ({
+            to: x,
+            value: 0n,
+            data: "0x"
+        }))
     } catch (e) {
         return null
     }

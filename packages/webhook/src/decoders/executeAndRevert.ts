@@ -32,18 +32,22 @@ const EXECUTE_AND_REVERT_ABI = [
     }
 ] as const
 
-export const executeAndRevertDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeAndRevertDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target, , data]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: EXECUTE_AND_REVERT_ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [
+            {
+                to,
+                value,
+                data
+            }
+        ]
     } catch (e) {
         return null
     }

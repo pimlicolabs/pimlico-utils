@@ -51,16 +51,22 @@ const EXEC_FROM_ENTRY_POINT_WITH_FEE_ABI = [
 
 export const execFromEntryPointWithFeeDecoder: CalldataDecoder = (
     calldata: Hex
-): [Address[], Hex[]] | null => {
+) => {
     try {
         const {
-            args: [target, , data]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: EXEC_FROM_ENTRY_POINT_WITH_FEE_ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [
+            {
+                to,
+                value,
+                data
+            }
+        ]
     } catch (e) {
         return null
     }

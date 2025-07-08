@@ -34,9 +34,7 @@ const EXECUTE_BATCH_ABI = [
     }
 ] as const
 
-export const executeBatchDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeBatchDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [calls]
@@ -45,10 +43,9 @@ export const executeBatchDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        const targets = calls.map((call) => call.to)
-        const calldatas = calls.map((call) => call.data)
-
-        return [targets, calldatas]
+        return calls.map((call) => ({
+            ...call
+        }))
     } catch (e) {
         return null
     }

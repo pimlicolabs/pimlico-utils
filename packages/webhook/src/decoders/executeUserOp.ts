@@ -32,18 +32,16 @@ const EXECUTE_USER_OP_ABI = [
     }
 ] as const
 
-export const executeUserOpDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeUserOpDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target, , data]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: EXECUTE_USER_OP_ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [{ to, value, data }]
     } catch (e) {
         return null
     }

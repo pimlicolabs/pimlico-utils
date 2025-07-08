@@ -36,16 +36,16 @@ const ABI = [
 
 export const executeUserOpWithErrorStringDecoder: CalldataDecoder = (
     calldata: Hex
-): [Address[], Hex[]] | null => {
+) => {
     try {
         const {
-            args: [target, , data]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [{ to, value, data }]
     } catch (e) {
         return null
     }

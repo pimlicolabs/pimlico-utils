@@ -78,21 +78,27 @@ const decoders: CalldataDecoder[] = [
     transferDecoder
 ]
 
-export const getCallDataTargets = (callData: Hex): Address[] => {
+export const parseCallData = (
+    callData: Hex
+): { to: Hex; value: bigint; data: Hex }[] => {
     for (const decoder of decoders) {
-        const result = decoder(callData)
+        const results = decoder(callData)
 
-        if (result === null) continue
+        if (results === null) continue
 
-        const [targets, parsedCallData] = result
+        const calls: { to: Hex; value: bigint; data: Hex }[] = []
 
-        const internalTargets = parsedCallData.flatMap((calldata) =>
-            getCallDataTargets(calldata)
-        )
+        for (const result of results) {
+            calls.push(result)
+            if (result.data !== "0x") {
+                const internalCalls = parseCallData(result.data)
+                for (const call of internalCalls) {
+                    calls.push(call)
+                }
+            }
+        }
 
-        const response = [...targets, ...internalTargets]
-
-        return Array.from(new Set(response))
+        return calls
     }
 
     return []

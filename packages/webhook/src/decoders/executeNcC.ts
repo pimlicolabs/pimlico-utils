@@ -27,18 +27,22 @@ const EXECUTE_NCC_ABI = [
     }
 ] as const
 
-export const executeNcCDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeNcCDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target, , data]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: EXECUTE_NCC_ABI,
             data: calldata
         })
 
-        return [[target], [data]]
+        return [
+            {
+                to,
+                value,
+                data
+            }
+        ]
     } catch (e) {
         return null
     }

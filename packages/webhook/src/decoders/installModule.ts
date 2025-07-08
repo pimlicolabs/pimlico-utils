@@ -27,9 +27,7 @@ const ABI = [
     }
 ] as const
 
-export const installModuleDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const installModuleDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
             args: [, module, initData]
@@ -38,7 +36,13 @@ export const installModuleDecoder: CalldataDecoder = (
             data: calldata
         })
 
-        return [[module], [initData]]
+        return [
+            {
+                to: module,
+                value: 0n,
+                data: initData
+            }
+        ]
     } catch (e) {
         return null
     }

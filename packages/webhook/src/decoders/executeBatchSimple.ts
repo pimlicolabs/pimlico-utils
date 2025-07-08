@@ -22,18 +22,20 @@ const EXECUTE_BATCH_SIMPLE_ABI = [
     }
 ] as const
 
-export const executeBatchSimpleDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeBatchSimpleDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [targets, datas]
+            args: [targets, data]
         } = decodeFunctionData({
             abi: EXECUTE_BATCH_SIMPLE_ABI,
             data: calldata
         })
 
-        return [Array.from(targets), Array.from(datas)]
+        return targets.map((target, index) => ({
+            to: target,
+            value: 0n,
+            data: data[index]
+        }))
     } catch (e) {
         return null
     }

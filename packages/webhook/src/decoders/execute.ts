@@ -28,18 +28,22 @@ const EXECUTE_ABI = [
     }
 ] as const
 
-export const executeDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         const {
-            args: [target]
+            args: [to, value, data]
         } = decodeFunctionData({
             abi: EXECUTE_ABI,
             data: calldata
         })
 
-        return [[target], []]
+        return [
+            {
+                to,
+                value,
+                data
+            }
+        ]
     } catch (e) {
         return null
     }

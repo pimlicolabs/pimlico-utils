@@ -36,9 +36,7 @@ const CALLTYPE_SINGLE = "0x00"
 const CALLTYPE_BATCH = "0x01"
 const CALLTYPE_DELEGATECALL = "0xff"
 
-export const executeKernelDecoder: CalldataDecoder = (
-    calldata: Hex
-): [Address[], Hex[]] | null => {
+export const executeKernelDecoder: CalldataDecoder = (calldata: Hex) => {
     try {
         // Attempt to decode the function calldata
         const decoded = decodeFunctionData({
@@ -60,31 +58,33 @@ export const executeKernelDecoder: CalldataDecoder = (
 const decodeByCallType = (
     callType: Hex,
     executionCalldata: Hex
-): [Address[], Hex[]] => {
-    // Initialize arrays for addresses and calldatas
-    const addresses: Address[] = []
-    const calldatas: Hex[] = []
+): ReturnType<CalldataDecoder> => {
+    const calls: ReturnType<CalldataDecoder> = []
 
     if (callType === CALLTYPE_SINGLE) {
         // Handle single call type
-        const [target, , callData] = decodeSingle(executionCalldata)
-        addresses.push(target)
-        calldatas.push(callData)
+        const [to, value, data] = decodeSingle(executionCalldata)
+        calls.push({
+            to,
+            value,
+            data
+        })
     } else if (callType === CALLTYPE_BATCH) {
         // Handle batch call type
         const executions = decodeBatch(executionCalldata)
         for (const execution of executions) {
-            addresses.push(execution.target)
-            calldatas.push(execution.callData)
+            calls.push({
+                ...execution
+            })
         }
     } else if (callType === CALLTYPE_DELEGATECALL) {
         // Handle delegate call type
-        const [delegate, callData] = decodeDelegate(executionCalldata)
-        addresses.push(delegate)
-        calldatas.push(callData)
+        calls.push({
+            ...decodeDelegate(executionCalldata)
+        })
     }
 
-    return [addresses, calldatas]
+    return calls
 }
 
 // Decode a single execution calldata (target, value, data)
@@ -106,20 +106,20 @@ const decodeSingle = (executionCalldata: Hex): [Address, bigint, Hex] => {
 // Decode batch execution calldata into execution structs
 const decodeBatch = (
     executionCalldata: Hex
-): { target: Address; value: bigint; callData: Hex }[] => {
+): { to: Address; value: bigint; data: Hex }[] => {
     // Following LibERC7579's decodeBatch implementation
-    const data = hexToBytes(executionCalldata)
-    const result: { target: Address; value: bigint; callData: Hex }[] = []
+    const callData = hexToBytes(executionCalldata)
+    const result: { to: Address; value: bigint; data: Hex }[] = []
 
     try {
         // First 32 bytes contain the offset to the array
-        const offsetBytes = data.slice(0, 32)
+        const offsetBytes = callData.slice(0, 32)
         const offset = Number(fromHex(bytesToHex(offsetBytes) as Hex, "bigint"))
 
         // At the offset, we have the length of the array (32 bytes)
-        if (data.length < offset + 32) return result
+        if (callData.length < offset + 32) return result
 
-        const lengthBytes = data.slice(offset, offset + 32)
+        const lengthBytes = callData.slice(offset, offset + 32)
         const length = Number(fromHex(bytesToHex(lengthBytes) as Hex, "bigint"))
 
         // After the length, we have the array of pointers
@@ -127,10 +127,10 @@ const decodeBatch = (
 
         // Process each pointer in the array
         for (let i = 0; i < length; i++) {
-            if (data.length < pointersOffset + (i + 1) * 32) break
+            if (callData.length < pointersOffset + (i + 1) * 32) break
 
             // Get the pointer value
-            const pointerBytes = data.slice(
+            const pointerBytes = callData.slice(
                 pointersOffset + i * 32,
                 pointersOffset + (i + 1) * 32
             )
@@ -145,21 +145,21 @@ const decodeBatch = (
             // - target address (32 bytes, but only last 20 bytes are used)
             // - value (32 bytes)
             // - calldata offset (32 bytes)
-            if (data.length < execOffset + 96) continue
+            if (callData.length < execOffset + 96) continue
 
             // Extract target address
-            const targetBytes = data
+            const targetBytes = callData
                 .slice(execOffset, execOffset + 32)
                 .slice(-20)
             const targetHex = bytesToHex(targetBytes)
-            const target = getAddress(`0x${targetHex.substring(2)}`)
+            const to = getAddress(`0x${targetHex.substring(2)}`)
 
             // Extract value
-            const valueBytes = data.slice(execOffset + 32, execOffset + 64)
+            const valueBytes = callData.slice(execOffset + 32, execOffset + 64)
             const value = fromHex(bytesToHex(valueBytes) as Hex, "bigint")
 
             // Extract calldata offset and then the calldata itself
-            const callDataOffsetBytes = data.slice(
+            const callDataOffsetBytes = callData.slice(
                 execOffset + 64,
                 execOffset + 96
             )
@@ -170,10 +170,10 @@ const decodeBatch = (
             // The calldata offset is relative to the execution struct start
             const callDataStart = execOffset + callDataOffset
 
-            if (data.length < callDataStart + 32) continue
+            if (callData.length < callDataStart + 32) continue
 
             // First 32 bytes at calldata position contain the length of the calldata
-            const callDataLengthBytes = data.slice(
+            const callDataLengthBytes = callData.slice(
                 callDataStart,
                 callDataStart + 32
             )
@@ -181,16 +181,16 @@ const decodeBatch = (
                 fromHex(bytesToHex(callDataLengthBytes) as Hex, "bigint")
             )
 
-            if (data.length < callDataStart + 32 + callDataLength) continue
+            if (callData.length < callDataStart + 32 + callDataLength) continue
 
             // Extract the actual calldata
-            const callDataBytes = data.slice(
+            const callDataBytes = callData.slice(
                 callDataStart + 32,
                 callDataStart + 32 + callDataLength
             )
-            const callData = bytesToHex(callDataBytes) as Hex
+            const data = bytesToHex(callDataBytes) as Hex
 
-            result.push({ target, value, callData })
+            result.push({ to, value, data })
         }
     } catch (error) {
         console.error("Error decoding batch calldata:", error)
@@ -200,13 +200,23 @@ const decodeBatch = (
 }
 
 // Decode delegate call data
-const decodeDelegate = (executionCalldata: Hex): [Address, Hex] => {
+const decodeDelegate = (
+    executionCalldata: Hex
+): {
+    to: Hex
+    data: Hex
+    value: bigint
+} => {
     // Extract the first 20 bytes as the delegate address
     const delegateHex = slice(executionCalldata, 0, 20)
-    const delegate = getAddress(delegateHex)
+    const to = getAddress(delegateHex)
 
     // The rest is the calldata
-    const callData = slice(executionCalldata, 20) as Hex
+    const data = slice(executionCalldata, 20) as Hex
 
-    return [delegate, callData]
+    return {
+        to,
+        value: 0n,
+        data
+    }
 }
