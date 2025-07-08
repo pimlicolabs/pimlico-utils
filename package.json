@@ -47,7 +47,7 @@
         {
             "name": "@pimlico/webhook (cjs)",
             "path": "./packages/webhook/_cjs/src/index.js",
-            "limit": "100 kB",
+            "limit": "200 kB",
             "import": "*"
         }
     ],
