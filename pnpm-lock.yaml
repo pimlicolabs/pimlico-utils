@@ -52,7 +52,7 @@ importers:
   examples/webhook:
     dependencies:
       '@pimlico/webhook':
-        specifier: workspace:^0.0.4
+        specifier: workspace:latest
         version: link:../../packages/webhook
       '@vercel/node':
         specifier: ^3.1.7
