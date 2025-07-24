@@ -2,13 +2,13 @@
     "name": "@pimlico/schemas",
     "version": "0.0.1",
     "author": "Pimlico",
-    "main": "./_cjs/index.js",
-    "module": "./_esm/index.js",
-    "types": "./_types/index.d.ts",
-    "typings": "./_types/index.d.ts",
+    "main": "./_cjs/src/index.js",
+    "module": "./_esm/src/index.js",
+    "types": "./src/index.ts",
+    "typings": "./src/index.ts",
     "type": "module",
     "sideEffects": false,
-    "description": "Zod schemas and utilities for Pimlico types.",
+    "description": "Zod schemas and utilities related to Account Abstraction. Made by https://pimlico.io",
     "license": "MIT",
     "publishConfig": {
         "access": "public"
@@ -20,11 +20,11 @@
     },
     "devDependencies": {
         "typescript": "^5.7.2",
-        "zod": "^3.23.8",
-        "viem": "^2.21.52"
+        "viem": "^2.21.52",
+        "zod": "^4.0.8"
     },
     "peerDependencies": {
-        "zod": "^3.23.8",
-        "viem": "^2.21.52"
+        "viem": "^2.21.52",
+        "zod": "^4.0.0"
     }
 }

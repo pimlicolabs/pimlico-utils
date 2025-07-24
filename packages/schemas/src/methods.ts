@@ -79,12 +79,13 @@ const pmSponsorUserOperationRequestSchema = z.object({
             ])
         )
         .transform((validated) => {
-            const [discriminated, ...rest] = validated
+            const [discriminated, paymasterContext, stateOverrides] = validated
 
             return [
                 discriminated.userOp,
                 discriminated.entryPoint,
-                ...rest
+                paymasterContext,
+                stateOverrides
             ] as const
         }),
     jsonrpc: z.literal("2.0"),

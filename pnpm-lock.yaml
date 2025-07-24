@@ -78,10 +78,10 @@ importers:
         version: 5.7.2
       viem:
         specifier: ^2.21.52
-        version: 2.21.53(typescript@5.7.2)(zod@3.25.76)
+        version: 2.21.53(typescript@5.7.2)(zod@4.0.8)
       zod:
-        specifier: ^3.23.8
-        version: 3.25.76
+        specifier: ^4.0.8
+        version: 4.0.8
 
   packages/webhook:
     dependencies:
@@ -1970,6 +1970,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.0.8:
+    resolution: {integrity: sha512-+MSh9cZU9r3QKlHqrgHMTSr3QwMGv4PLfR0M4N/sYWV5/x67HgXEhIGObdBkpnX8G78pTgWnIrBL2lZcNJOtfg==}
+
 snapshots:
 
   '@adraffy/ens-normalize@1.11.0': {}
@@ -2601,6 +2604,11 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.2
       zod: 3.25.76
+
+  abitype@1.0.6(typescript@5.7.2)(zod@4.0.8):
+    optionalDependencies:
+      typescript: 5.7.2
+      zod: 4.0.8
 
   acorn-import-attributes@1.9.5(acorn@8.14.0):
     dependencies:
@@ -3375,6 +3383,20 @@ snapshots:
     transitivePeerDependencies:
       - zod
 
+  ox@0.1.2(typescript@5.7.2)(zod@4.0.8):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.7.2)(zod@4.0.8)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - zod
+
   p-filter@2.1.0:
     dependencies:
       p-map: 2.1.0
@@ -3816,6 +3838,24 @@ snapshots:
       - utf-8-validate
       - zod
 
+  viem@2.21.53(typescript@5.7.2)(zod@4.0.8):
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.7.2)(zod@4.0.8)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.1.2(typescript@5.7.2)(zod@4.0.8)
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
   web-vitals@0.2.4: {}
 
   webauthn-p256@0.0.10:
@@ -3884,4 +3924,7 @@ snapshots:
 
   yn@3.1.1: {}
 
-  zod@3.25.76: {}
+  zod@3.25.76:
+    optional: true
+
+  zod@4.0.8: {}
