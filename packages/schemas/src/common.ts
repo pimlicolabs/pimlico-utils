@@ -73,29 +73,78 @@ const compliantAddressSchema = addressSchema.refine(
     }
 )
 
-const rpcCallSchema = z
-    .object({
-        jsonrpc: z.literal("2.0"),
-        id: z.number(),
-        method: z.string(),
-        params: z
-            .array(z.unknown())
-            .optional()
-            .transform((val) => val ?? [])
+const gasPriceSchema = z.object({
+    slow: z.object({
+        maxFeePerGas: z.bigint(),
+        maxPriorityFeePerGas: z.bigint()
+    }),
+    standard: z.object({
+        maxFeePerGas: z.bigint(),
+        maxPriorityFeePerGas: z.bigint()
+    }),
+    fast: z.object({
+        maxFeePerGas: z.bigint(),
+        maxPriorityFeePerGas: z.bigint()
     })
-    .strict()
+})
 
-const jsonRpcSchema = z.union([rpcCallSchema, z.array(rpcCallSchema)])
+const logSchema = z.object({
+    logIndex: hexNumberSchema,
+    transactionIndex: hexNumberSchema,
+    transactionHash: hexData32Schema,
+    blockHash: hexData32Schema,
+    blockNumber: hexNumberSchema,
+    address: addressSchema,
+    data: hexDataSchema,
+    topics: z.array(hexData32Schema)
+})
 
-type JSONRPCRequest = z.infer<typeof jsonRpcSchema>
+const receiptSchema = z.object({
+    transactionHash: hexData32Schema,
+    transactionIndex: hexNumberSchema,
+    blockHash: hexData32Schema,
+    blockNumber: hexNumberSchema,
+    from: addressSchema,
+    to: addressSchema.or(z.null()),
+    cumulativeGasUsed: hexNumberSchema,
+    gasUsed: hexNumberSchema,
+    contractAddress: addressSchema.or(z.null()),
+    logs: z.array(logSchema),
+    logsBloom: z.string().regex(/^0x[0-9a-f]{512}$/),
+    status: hexNumberSchema.or(z.null()),
+    effectiveGasPrice: hexNumberSchema.nullish()
+})
 
-const jsonRpcResultSchema = z
-    .object({
-        jsonrpc: z.literal("2.0"),
-        id: z.number(),
-        result: z.unknown()
-    })
-    .strict()
+const userOperationReceiptSchema = z.object({
+    userOpHash: hexData32Schema,
+    entryPoint: addressSchema,
+    sender: addressSchema,
+    nonce: hexNumberSchema,
+    paymaster: addressSchema.optional(),
+    actualGasCost: hexNumberSchema,
+    actualGasUsed: hexNumberSchema,
+    success: z.boolean(),
+    reason: hexDataSchema.optional(), // revert reason
+    logs: z.array(logSchema),
+    receipt: receiptSchema
+})
+
+type UserOperationReceipt = z.infer<typeof userOperationReceiptSchema>
+
+const userOperationStatusSchema = z.object({
+    status: z.enum([
+        "not_found",
+        "not_submitted",
+        "submitted",
+        "rejected",
+        "reverted",
+        "included",
+        "failed"
+    ]),
+    transactionHash: hexData32Schema.or(z.null())
+})
+
+type UserOperationStatus = z.infer<typeof userOperationStatusSchema>
 
 export {
     addressSchema,
@@ -103,11 +152,15 @@ export {
     hexDataSchema,
     hexData32Schema,
     compliantAddressSchema,
-    jsonRpcSchema,
-    jsonRpcResultSchema,
+    gasPriceSchema,
+    userOperationReceiptSchema,
+    logSchema,
+    receiptSchema,
+    userOperationStatusSchema,
     type Address,
     type HexNumber,
     type HexData,
     type HexData32,
-    type JSONRPCRequest
+    type UserOperationReceipt,
+    type UserOperationStatus,
 }
