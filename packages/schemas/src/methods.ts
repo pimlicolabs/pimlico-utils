@@ -1,111 +1,28 @@
 import z from "zod/v4"
-import { addressSchema, gasPriceSchema, hexData32Schema, hexNumberSchema, userOperationReceiptSchema, userOperationStatusSchema } from "./common"
-import { paymasterContextSchema } from "./paymaster-context"
+import {
+    addressSchema,
+    gasPriceSchema,
+    hexData32Schema,
+    hexNumberSchema,
+    userOperationReceiptSchema,
+    userOperationStatusSchema
+} from "./common"
 import { stateOverridesSchema } from "./state-overrides"
 import {
-    entryPointAwareEip7677UserOperationSchema,
     entryPointAwarePartialUserOperationSchema,
     entryPointAwareUserOperationSchema,
     userOperationSchema
 } from "./userop"
 
-const pmSupportedEntryPointsRequestSchema = z.object({
-    method: z.literal("pm_supportedEntryPoints"),
-    params: z.tuple([]),
-    jsonrpc: z.literal("2.0"),
-    id: z.number()
-})
-
-const pmGetPaymasterDataParamsSchema = z
-    .tuple([
-        z.looseObject({}),
-        addressSchema,
-        hexNumberSchema,
-        paymasterContextSchema.nullish()
-    ])
-    .transform((params) => {
-        const [userOp, entryPoint, ...rest] = params
-
-        return [{ userOp, entryPoint }, ...rest]
-    })
-    .pipe(
-        z.tuple([
-            entryPointAwareEip7677UserOperationSchema,
-            z.bigint(),
-            paymasterContextSchema.nullish()
-        ])
-    )
-    .transform((validated) => {
-        const [discriminated, ...rest] = validated
-
-        return [
-            discriminated.userOp,
-            discriminated.entryPoint,
-            ...rest
-        ] as const
-    })
-
-const pmGetPaymasterStubDataRequestSchema = z.object({
-    method: z.literal("pm_getPaymasterStubData"),
-    params: pmGetPaymasterDataParamsSchema,
-    jsonrpc: z.literal("2.0"),
-    id: z.number()
-})
-
-const pmGetPaymasterDataRequestSchema = z.object({
-    method: z.literal("pm_getPaymasterData"),
-    params: pmGetPaymasterDataParamsSchema,
-    jsonrpc: z.literal("2.0"),
-    id: z.number()
-})
-
-const pmSponsorUserOperationRequestSchema = z.object({
-    method: z.literal("pm_sponsorUserOperation"),
-    params: z
-        .tuple([
-            z.looseObject({}),
-            addressSchema,
-            z.looseObject({}).nullish(),
-            z.looseObject({}).nullish()
-        ])
-        .transform((params) => {
-            const [userOp, entryPoint, ...rest] = params
-            return [{ userOp, entryPoint }, ...rest]
-        })
-        .pipe(
-            z.tuple([
-                entryPointAwareEip7677UserOperationSchema,
-                paymasterContextSchema.nullish(),
-                stateOverridesSchema.nullish()
-            ])
-        )
-        .transform((validated) => {
-            const [discriminated, paymasterContext, stateOverrides] = validated
-
-            return [
-                discriminated.userOp,
-                discriminated.entryPoint,
-                paymasterContext,
-                stateOverrides
-            ] as const
-        }),
-    jsonrpc: z.literal("2.0"),
-    id: z.number()
-})
-
 const chainIdRequestSchema = z.object({
     method: z.literal("eth_chainId"),
     params: z.tuple([]),
-    jsonrpc: z.literal("2.0"),
-    id: z.number(),
     result: hexNumberSchema
 })
 
 const supportedEntryPointsRequestSchema = z.object({
     method: z.literal("eth_supportedEntryPoints"),
     params: z.tuple([]),
-    jsonrpc: z.literal("2.0"),
-    id: z.number(),
     result: z.array(addressSchema)
 })
 
@@ -125,16 +42,14 @@ const estimateUserOperationGasRequestSchema = z.object({
             ])
         )
         .transform((validated) => {
-            const [discriminated, ...rest] = validated
+            const [discriminated, stateOverrides] = validated
 
             return [
                 discriminated.userOp,
                 discriminated.entryPoint,
-                ...rest
+                stateOverrides
             ] as const
         }),
-    jsonrpc: z.literal("2.0"),
-    id: z.number(),
     result: z.union([
         z.object({
             callGasLimit: hexNumberSchema,
@@ -172,15 +87,14 @@ const sendUserOperationRequestSchema = z.object({
     result: hexData32Schema
 })
 
-const boostSendUserOperationRequestSchema = sendUserOperationRequestSchema.extend({
-    method: z.literal("boost_sendUserOperation"),
-})
+const boostSendUserOperationRequestSchema =
+    sendUserOperationRequestSchema.extend({
+        method: z.literal("boost_sendUserOperation")
+    })
 
 const getUserOperationByHashRequestSchema = z.object({
     method: z.literal("eth_getUserOperationByHash"),
     params: z.tuple([hexData32Schema]),
-    jsonrpc: z.literal("2.0"),
-    id: z.number(),
     result: z
         .object({
             userOperation: userOperationSchema,
@@ -188,48 +102,51 @@ const getUserOperationByHashRequestSchema = z.object({
             blockNumber: hexNumberSchema,
             blockHash: hexData32Schema,
             transactionHash: hexData32Schema
-        }).nullable()
+        })
+        .nullable()
 })
 
 const getUserOperationReceiptRequestSchema = z.object({
     method: z.literal("eth_getUserOperationReceipt"),
     params: z.tuple([hexData32Schema]),
-    jsonrpc: z.literal("2.0"),
-    id: z.number(),
     result: userOperationReceiptSchema.nullable()
 })
 
-const debugClearStateSchema = z.object({
+const debugClearStateRequestSchema = z.object({
     method: z.literal("debug_bundler_clearState"),
     params: z.tuple([]),
     result: z.literal("ok")
 })
 
-const debugClearMempoolSchema = z.object({
+const debugClearMempoolRequestSchema = z.object({
     method: z.literal("debug_bundler_clearMempool"),
     params: z.tuple([]),
     result: z.literal("ok")
 })
 
-const debugDumpMempoolSchema = z.object({
+const debugDumpMempoolRequestSchema = z.object({
     method: z.literal("debug_bundler_dumpMempool"),
     params: z.tuple([addressSchema]),
     result: z.array(userOperationSchema)
 })
 
-const debugSendBundleNowSchema = z.object({
+const debugSendBundleNowRequestSchema = z.object({
     method: z.literal("debug_bundler_sendBundleNow"),
     params: z.tuple([]),
     result: z.literal("ok")
 })
 
-const debugSetBundlingModeSchema = z.object({
+const debugSetBundlingModeRequestSchema = z.object({
     method: z.literal("debug_bundler_setBundlingMode"),
     params: z.tuple([z.enum(["manual", "auto"])]),
     result: z.literal("ok")
 })
 
-const debugSetReputationSchema = z.object({
+type BundlingMode = z.infer<
+    typeof debugSetBundlingModeRequestSchema
+>["params"][0]
+
+const debugSetReputationRequestSchema = z.object({
     method: z.literal("debug_bundler_setReputation"),
     params: z.tuple([
         z.array(
@@ -244,7 +161,7 @@ const debugSetReputationSchema = z.object({
     result: z.literal("ok")
 })
 
-const debugDumpReputationSchema = z.object({
+const debugDumpReputationRequestSchema = z.object({
     method: z.literal("debug_bundler_dumpReputation"),
     params: z.tuple([addressSchema]),
     result: z.array(
@@ -257,13 +174,13 @@ const debugDumpReputationSchema = z.object({
     )
 })
 
-const debugClearReputationSchema = z.object({
+const debugClearReputationRequestSchema = z.object({
     method: z.literal("debug_bundler_clearReputation"),
     params: z.tuple([]),
     result: z.literal("ok")
 })
 
-const debugGetStakeStatusSchema = z.object({
+const debugGetStakeStatusRequestSchema = z.object({
     method: z.literal("debug_bundler_getStakeStatus"),
     params: z.tuple([addressSchema, addressSchema]),
     result: z.object({
@@ -284,45 +201,70 @@ const debugGetStakeStatusSchema = z.object({
     })
 })
 
-const pimlicoGetUserOperationStatusSchema = z.object({
+const pimlicoGetUserOperationStatusRequestSchema = z.object({
     method: z.literal("pimlico_getUserOperationStatus"),
     params: z.tuple([hexData32Schema]),
     result: userOperationStatusSchema
 })
 
-const pimlicoGetUserOperationGasPriceSchema = z.object({
+const pimlicoGetUserOperationGasPriceRequestSchema = z.object({
     method: z.literal("pimlico_getUserOperationGasPrice"),
     params: z.tuple([]),
     result: gasPriceSchema
 })
 
-const pimlicoSendUserOperationNowSchema = z.object({
+const pimlicoSendUserOperationNowRequestSchema = z.object({
     method: z.literal("pimlico_sendUserOperationNow"),
-    params: z.tuple([userOperationSchema, addressSchema]),
-    result: userOperationReceiptSchema.or(z.null())
+    params: z
+        .tuple([z.looseObject({}), addressSchema])
+        .transform((params) => {
+            const [userOp, entryPoint] = params
+
+            return [{ userOp, entryPoint }]
+        })
+        .pipe(z.tuple([entryPointAwareUserOperationSchema]))
+        .transform((validated) => {
+            const [discriminated] = validated
+
+            return [discriminated.userOp, discriminated.entryPoint] as const
+        }),
+    result: userOperationReceiptSchema.nullable()
 })
 
-const pimlicoSimulateAssetChangeSchema = z.object({
+const pimlicoSimulateAssetChangeRequestSchema = z.object({
     method: z.literal("pimlico_simulateAssetChange"),
-    params: z.union([
-        z.tuple([
-            userOperationSchema,
-            addressSchema, // entryPoint
-            z.object({
-                addresses: z.array(addressSchema),
-                tokens: z.array(addressSchema)
-            })
-        ]),
-        z.tuple([
-            userOperationSchema,
-            addressSchema, // entryPoint
-            z.object({
-                addresses: z.array(addressSchema),
-                tokens: z.array(addressSchema)
-            }),
-            stateOverridesSchema // optional state overrides
+    params: z
+        .tuple([
+            z.looseObject({}),
+            addressSchema,
+            z.looseObject({}),
+            z.looseObject({}).optional()
         ])
-    ]),
+        .transform((params) => {
+            const [userOp, entryPoint, trackingParams, stateOverrides] = params
+
+            return [{ userOp, entryPoint }, trackingParams, stateOverrides]
+        })
+        .pipe(
+            z.tuple([
+                entryPointAwareUserOperationSchema,
+                z.object({
+                    addresses: z.array(addressSchema),
+                    tokens: z.array(addressSchema)
+                }),
+                stateOverridesSchema.optional()
+            ])
+        )
+        .transform((validated) => {
+            const [discriminated, trackingParams, stateOverrides] = validated
+
+            return [
+                discriminated.userOp,
+                discriminated.entryPoint,
+                trackingParams,
+                stateOverrides
+            ] as const
+        }),
     result: z.array(
         z.object({
             address: addressSchema,
@@ -333,29 +275,53 @@ const pimlicoSimulateAssetChangeSchema = z.object({
     )
 })
 
+const bundlerRequestSchema = z.discriminatedUnion("method", [
+    chainIdRequestSchema.omit({ result: true }),
+    supportedEntryPointsRequestSchema.omit({ result: true }),
+    estimateUserOperationGasRequestSchema.omit({ result: true }),
+    sendUserOperationRequestSchema.omit({ result: true }),
+    boostSendUserOperationRequestSchema.omit({ result: true }),
+    getUserOperationByHashRequestSchema.omit({ result: true }),
+    getUserOperationReceiptRequestSchema.omit({ result: true }),
+    debugClearStateRequestSchema.omit({ result: true }),
+    debugClearMempoolRequestSchema.omit({ result: true }),
+    debugDumpMempoolRequestSchema.omit({ result: true }),
+    debugSendBundleNowRequestSchema.omit({ result: true }),
+    debugSetBundlingModeRequestSchema.omit({ result: true }),
+    debugSetReputationRequestSchema.omit({ result: true }),
+    debugDumpReputationRequestSchema.omit({ result: true }),
+    debugClearReputationRequestSchema.omit({ result: true }),
+    debugGetStakeStatusRequestSchema.omit({ result: true }),
+    pimlicoGetUserOperationStatusRequestSchema.omit({ result: true }),
+    pimlicoGetUserOperationGasPriceRequestSchema.omit({ result: true }),
+    pimlicoSendUserOperationNowRequestSchema.omit({ result: true }),
+    pimlicoSimulateAssetChangeRequestSchema.omit({ result: true })
+])
+
+type BundlerRequest = z.infer<typeof bundlerRequestSchema>
+
 export {
-    pmSupportedEntryPointsRequestSchema,
-    pmGetPaymasterStubDataRequestSchema,
-    pmGetPaymasterDataRequestSchema,
-    pmSponsorUserOperationRequestSchema,
     chainIdRequestSchema,
     supportedEntryPointsRequestSchema,
     estimateUserOperationGasRequestSchema,
     sendUserOperationRequestSchema,
+    boostSendUserOperationRequestSchema,
     getUserOperationByHashRequestSchema,
     getUserOperationReceiptRequestSchema,
-    debugClearStateSchema,
-    debugClearMempoolSchema,
-    debugDumpMempoolSchema,
-    debugSendBundleNowSchema,
-    debugSetBundlingModeSchema,
-    debugSetReputationSchema,
-    debugDumpReputationSchema,
-    debugClearReputationSchema,
-    boostSendUserOperationRequestSchema,
-    debugGetStakeStatusSchema,
-    pimlicoGetUserOperationStatusSchema,
-    pimlicoGetUserOperationGasPriceSchema,
-    pimlicoSendUserOperationNowSchema,
-    pimlicoSimulateAssetChangeSchema
+    debugClearStateRequestSchema,
+    debugClearMempoolRequestSchema,
+    debugDumpMempoolRequestSchema,
+    debugSendBundleNowRequestSchema,
+    debugSetBundlingModeRequestSchema,
+    debugSetReputationRequestSchema,
+    debugDumpReputationRequestSchema,
+    debugClearReputationRequestSchema,
+    debugGetStakeStatusRequestSchema,
+    pimlicoGetUserOperationStatusRequestSchema,
+    pimlicoGetUserOperationGasPriceRequestSchema,
+    pimlicoSendUserOperationNowRequestSchema,
+    pimlicoSimulateAssetChangeRequestSchema,
+    bundlerRequestSchema,
+    type BundlerRequest,
+    type BundlingMode
 }

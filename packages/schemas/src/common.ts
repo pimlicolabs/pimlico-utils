@@ -5,6 +5,8 @@ import { ofacList } from "./utils"
 const hexDataPattern = /^0x[0-9A-Fa-f]*$/
 const addressPattern = /^0x[0-9,a-f,A-F]{40}$/
 const hexData32Pattern = /^0x([0-9a-fA-F][0-9a-fA-F]){32}$/
+const commaSeperatedAddressPattern =
+    /^(0x[0-9a-fA-F]{40})(,\s*(0x[0-9a-fA-F]{40}))*$/
 
 const addressSchema = z
     .string()
@@ -146,21 +148,28 @@ const userOperationStatusSchema = z.object({
 
 type UserOperationStatus = z.infer<typeof userOperationStatusSchema>
 
+const altoVersions = z.enum(["v1", "v2"])
+
+type AltoVersions = z.infer<typeof altoVersions>
+
 export {
     addressSchema,
     hexNumberSchema,
     hexDataSchema,
     hexData32Schema,
+    commaSeperatedAddressPattern,
     compliantAddressSchema,
     gasPriceSchema,
     userOperationReceiptSchema,
     logSchema,
     receiptSchema,
     userOperationStatusSchema,
+    altoVersions,
     type Address,
     type HexNumber,
     type HexData,
     type HexData32,
     type UserOperationReceipt,
     type UserOperationStatus,
+    type AltoVersions
 }

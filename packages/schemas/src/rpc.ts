@@ -26,4 +26,9 @@ const jsonRpcResultSchema = z
 
 type JSONRPCResponse = z.infer<typeof jsonRpcResultSchema>
 
-export { jsonRpcSchema, jsonRpcResultSchema, type JSONRPCRequest, type JSONRPCResponse }
+export {
+    jsonRpcSchema,
+    jsonRpcResultSchema,
+    type JSONRPCRequest,
+    type JSONRPCResponse
+}

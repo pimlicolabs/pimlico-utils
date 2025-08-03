@@ -21,7 +21,7 @@
     "devDependencies": {
         "typescript": "^5.7.2",
         "viem": "^2.21.52",
-        "zod": "^4.0.8"
+        "zod": "^4.0.10"
     },
     "peerDependencies": {
         "viem": "^2.21.52",
