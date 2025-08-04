@@ -1,4 +1,4 @@
-import { type Address } from "viem"
+import type { Address } from "viem"
 
 const ENTRYPOINT_V6_ADDRESS: Address =
     "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789" as const
