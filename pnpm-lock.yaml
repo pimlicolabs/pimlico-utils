@@ -71,6 +71,18 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
 
+  packages/schemas:
+    devDependencies:
+      typescript:
+        specifier: ^5.7.2
+        version: 5.7.2
+      viem:
+        specifier: ^2.21.52
+        version: 2.21.53(typescript@5.7.2)(zod@4.0.10)
+      zod:
+        specifier: ^4.0.10
+        version: 4.0.10
+
   packages/webhook:
     dependencies:
       base-x:
@@ -85,7 +97,7 @@ importers:
         version: 5.7.2
       viem:
         specifier: ^2.21.52
-        version: 2.21.53(typescript@5.7.2)
+        version: 2.21.53(typescript@5.7.2)(zod@3.25.76)
 
 packages:
 
@@ -1955,6 +1967,12 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+  zod@4.0.10:
+    resolution: {integrity: sha512-3vB+UU3/VmLL2lvwcY/4RV2i9z/YU0DTV/tDuYjrwmx5WeJ7hwy+rGEEx8glHp6Yxw7ibRbKSaIFBgReRPe5KA==}
+
 snapshots:
 
   '@adraffy/ens-normalize@1.11.0': {}
@@ -2582,9 +2600,15 @@ snapshots:
 
   abbrev@1.1.1: {}
 
-  abitype@1.0.6(typescript@5.7.2):
+  abitype@1.0.6(typescript@5.7.2)(zod@3.25.76):
     optionalDependencies:
       typescript: 5.7.2
+      zod: 3.25.76
+
+  abitype@1.0.6(typescript@5.7.2)(zod@4.0.10):
+    optionalDependencies:
+      typescript: 5.7.2
+      zod: 4.0.10
 
   acorn-import-attributes@1.9.5(acorn@8.14.0):
     dependencies:
@@ -3345,14 +3369,28 @@ snapshots:
 
   outdent@0.5.0: {}
 
-  ox@0.1.2(typescript@5.7.2):
+  ox@0.1.2(typescript@5.7.2)(zod@3.25.76):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0
       '@scure/bip32': 1.5.0
       '@scure/bip39': 1.4.0
-      abitype: 1.0.6(typescript@5.7.2)
+      abitype: 1.0.6(typescript@5.7.2)(zod@3.25.76)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - zod
+
+  ox@0.1.2(typescript@5.7.2)(zod@4.0.10):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.7.2)(zod@4.0.10)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.7.2
@@ -3782,15 +3820,33 @@ snapshots:
       - encoding
       - supports-color
 
-  viem@2.21.53(typescript@5.7.2):
+  viem@2.21.53(typescript@5.7.2)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0
       '@scure/bip32': 1.5.0
       '@scure/bip39': 1.4.0
-      abitype: 1.0.6(typescript@5.7.2)
+      abitype: 1.0.6(typescript@5.7.2)(zod@3.25.76)
       isows: 1.0.6(ws@8.18.0)
-      ox: 0.1.2(typescript@5.7.2)
+      ox: 0.1.2(typescript@5.7.2)(zod@3.25.76)
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
+  viem@2.21.53(typescript@5.7.2)(zod@4.0.10):
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.7.2)(zod@4.0.10)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.1.2(typescript@5.7.2)(zod@4.0.10)
       webauthn-p256: 0.0.10
       ws: 8.18.0
     optionalDependencies:
@@ -3867,3 +3923,8 @@ snapshots:
       fd-slicer: 1.1.0
 
   yn@3.1.1: {}
+
+  zod@3.25.76:
+    optional: true
+
+  zod@4.0.10: {}

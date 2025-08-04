@@ -3,12 +3,24 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to release'
+        required: true
+        default: 'webhook'
+        type: choice
+        options:
+          - cli
+          - schemas  
+          - webhook
 
 jobs:
   canary:
     name: Release canary
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      PACKAGE: ${{ github.event.inputs.package || 'webhook' }}
 
     steps:
       - name: Clone repository
@@ -22,17 +34,17 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Set @pimlico/webhook version
+      - name: Set @pimlico/${{ env.PACKAGE }} version
         run: |
           jq --arg prop "workspaces" 'del(.[$prop])' package.json > package.tmp.json && rm package.json && cp package.tmp.json package.json && rm package.tmp.json
-          cd packages/webhook
+          cd packages/${{ env.PACKAGE }}
           npm --no-git-tag-version version 0.0.0
           npm --no-git-tag-version version $(npm pkg get version | sed 's/"//g')-$(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//').$(date +'%Y%m%dT%H%M%S')
 
       - name: Build
         run: pnpm run build
 
-      - name: Publish @pimlico/webhook to npm
-        run: cd packages/webhook && npm publish --tag $(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//')
+      - name: Publish @pimlico/${{ env.PACKAGE }} to npm
+        run: cd packages/${{ env.PACKAGE }} && npm publish --tag $(git branch --show-current | tr -cs '[:alnum:]-' '-' | tr '[:upper:]' '[:lower:]' | sed 's/-$//')
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_ORG_PIMLICO_UTILS_TOKEN }}
