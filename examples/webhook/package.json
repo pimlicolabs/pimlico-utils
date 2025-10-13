@@ -12,7 +12,7 @@
     "private": true,
     "dependencies": {
         "@pimlico/webhook": "workspace:latest",
-        "@vercel/node": "^3.1.7",
-        "vercel": "^34.2.7"
+        "@vercel/node": "^5.3.26",
+        "vercel": "^48.2.9"
     }
 }
