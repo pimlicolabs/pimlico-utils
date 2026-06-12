@@ -121,6 +121,17 @@ function updateEnvFile(envPathInput: string, envVar: string, apiKeyId: string) {
     fs.writeFileSync(envPath, content, { encoding: "utf8" })
 }
 
+// Mask a credential so it is never printed in full. Coding agents (e.g. Claude
+// Code) capture stdout into their chat context, so logging the raw key would
+// leak it. Keep just enough (a short prefix + suffix) to let the user confirm
+// the right key was received without exposing the usable secret.
+function redactSecret(secret: string) {
+    if (secret.length <= 8) {
+        return "*".repeat(secret.length)
+    }
+    return `${secret.slice(0, 4)}…${secret.slice(-4)}`
+}
+
 function openBrowser(url: string) {
     try {
         // macOS, Linux, Windows
@@ -159,7 +170,9 @@ async function main() {
                 res.setHeader("Content-Type", "text/plain")
                 if (apiKey) {
                     res.end("API key received! You can now close this tab.")
-                    console.log(`\n✅  Received API key id: ${apiKey}`)
+                    console.log(
+                        `\n✅  Received API key: ${redactSecret(apiKey)}`
+                    )
                     updateEnvFile(envPath, envVar, apiKey)
                     console.log(`${envPath} updated with ${envVar}`)
                     server.close()
